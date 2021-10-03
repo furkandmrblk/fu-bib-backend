@@ -20,6 +20,21 @@ export interface Context {
   session?: null;
 }
 
+export function createGraphQLContext(
+  req: IncomingMessage,
+  res: OutgoingMessage,
+  pubsub: PubSub,
+  session?: null
+): Context {
+  return {
+    req,
+    res,
+    pubsub,
+    user: session,
+    session,
+  };
+}
+
 const prisma = new PrismaClient({});
 
 export const builder = new SchemaBuilder<{

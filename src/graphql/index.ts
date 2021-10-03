@@ -1,8 +1,14 @@
-import { writeFileSync } from "fs";
+import fs from "fs";
+import path from "path";
 import { lexicographicSortSchema, printSchema } from "graphql";
 import { builder } from "./builder";
 
 export const schema = builder.toSchema({});
 const schemaAsString = printSchema(lexicographicSortSchema(schema));
 
-writeFileSync("src/graphql/schema.gql", schemaAsString);
+if (process.env.NODE_ENV !== "production") {
+  fs.writeFileSync(
+    path.join(process.cwd(), "src/graphql/schema.gql"),
+    schemaAsString
+  );
+}

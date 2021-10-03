@@ -1,4 +1,4 @@
-import type { Prisma, User, Library, Table } from "/Users/ibrahim-furkandemirbilek/Desktop/TypeScriptMobile/fu-bib-backend/node_modules/@prisma/client";
+import type { Prisma, User, Library, Table } from "/srv/node_modules/@prisma/client";
 export default interface PrismaTypes {
     User: {
         Shape: User;

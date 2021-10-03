@@ -8,7 +8,7 @@ import {
   shouldRenderGraphiQL,
 } from "graphql-helix";
 import { PubSub } from "graphql-subscriptions";
-import { schema } from "src/graphql";
+import { schema } from "../../src/graphql/index";
 
 const allowedOrigins: string[] = ["http://localhost:3000"];
 export const pubsub = new PubSub();

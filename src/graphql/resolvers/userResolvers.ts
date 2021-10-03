@@ -1,3 +1,4 @@
+import { db } from "src/utils/prisma";
 import { builder } from "../builder";
 
 builder.prismaObject("User", {
