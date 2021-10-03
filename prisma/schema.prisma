@@ -26,16 +26,16 @@ model User {
     id       String @id @default(uuid())
     email    String @unique
     password String
-    name     String
-    major    String
+    name     String?
+    major    String?
 
-    mostUsedLibrary String
-    mostUsedTable   String
+    mostUsedLibrary String?
+    mostUsedTable   String?
 
-    reservations Int
-    extensions   Int
+    reservations Int?
+    extensions   Int?
 
-    strikes Int
+    strikes Int?
 
     date    Float
     Session Session[]
