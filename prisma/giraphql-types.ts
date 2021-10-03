@@ -1,12 +1,30 @@
-import type { Prisma, User, Library, Table } from "/srv/node_modules/@prisma/client";
+import type { Prisma, Session, User, Library, Table } from "/Users/ibrahim-furkandemirbilek/Desktop/TypeScriptMobile/fu-bib-backend/node_modules/@prisma/client";
 export default interface PrismaTypes {
+    Session: {
+        Shape: Session;
+        Include: Prisma.SessionInclude;
+        Where: Prisma.SessionWhereUniqueInput;
+        Fields: "user";
+        ListRelations: never;
+        Relations: {
+            user: {
+                Shape: User;
+                Types: PrismaTypes["User"];
+            };
+        };
+    };
     User: {
         Shape: User;
-        Include: never;
+        Include: Prisma.UserInclude;
         Where: Prisma.UserWhereUniqueInput;
-        Fields: never;
-        ListRelations: never;
-        Relations: {};
+        Fields: "Session";
+        ListRelations: "Session";
+        Relations: {
+            Session: {
+                Shape: Session[];
+                Types: PrismaTypes["Session"];
+            };
+        };
     };
     Library: {
         Shape: Library;
