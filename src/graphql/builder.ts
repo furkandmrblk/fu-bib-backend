@@ -1,4 +1,4 @@
-import { PrismaClient } from ".prisma/client";
+import { PrismaClient, Session, User } from ".prisma/client";
 import SchemaBuilder from "@giraphql/core";
 import ErrorsPlugin from "@giraphql/plugin-errors";
 import SimpleObjectsPlugin from "@giraphql/plugin-simple-objects";
@@ -16,21 +16,21 @@ export interface Context {
   req: IncomingMessage;
   res: OutgoingMessage;
   pubsub: PubSub;
-  user?: null;
-  session?: null;
+  user?: User | null;
+  session?: Session | null;
 }
 
 export function createGraphQLContext(
   req: IncomingMessage,
   res: OutgoingMessage,
   pubsub: PubSub,
-  session?: null
+  session?: (Session & { user: User }) | null
 ): Context {
   return {
     req,
     res,
     pubsub,
-    user: session,
+    user: session?.user,
     session,
   };
 }
