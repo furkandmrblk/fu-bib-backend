@@ -1,3 +1,4 @@
+import { User } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "./prisma";
 
@@ -34,4 +35,10 @@ export const checkUser = async (email: string, password: string) => {
 
   await checkPassword(password, user.password);
   return user;
+};
+// Check Strikes
+export const checkStrikes = async (user: User) => {
+  if (user.strikes === 3) {
+    // Soft ban users account
+  }
 };
