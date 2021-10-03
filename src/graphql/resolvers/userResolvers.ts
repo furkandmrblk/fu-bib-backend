@@ -17,3 +17,23 @@ builder.prismaObject("User", {
     date: t.exposeFloat("date"),
   }),
 });
+
+builder.queryField("getUser", (t) =>
+  t.prismaField({
+    type: "User",
+    args: {
+      id: t.arg.id(),
+    },
+    authScopes: {
+      public: true,
+    },
+    skipTypeScopes: true,
+    resolve: async (query, _root, { id }, _ctx) => {
+      return await db.user.findUnique({
+        ...query,
+        where: { id: id },
+        rejectOnNotFound: true,
+      });
+    },
+  })
+);
