@@ -93,8 +93,8 @@ builder.mutationType({
     user: true,
   },
 });
-builder.subscriptionType({
-  authScopes: {
-    user: true,
-  },
-});
+// builder.subscriptionType({
+//   authScopes: {
+//     user: true,
+//   },
+// });
