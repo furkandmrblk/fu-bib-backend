@@ -17,11 +17,13 @@ builder.prismaObject("User", {
     password: t.exposeString("password"),
     name: t.exposeString("name", { nullable: true }),
     major: t.exposeString("major", { nullable: true }),
+    booked: t.exposeBoolean("booked"),
     mostUsedLibrary: t.exposeString("mostUsedLibrary", { nullable: true }),
     mostUserTable: t.exposeString("mostUsedTable", { nullable: true }),
     reservations: t.exposeInt("reservations", { nullable: true }),
     extensions: t.exposeInt("extensions", { nullable: true }),
     strikes: t.exposeInt("strikes", { nullable: true }),
+    softban: t.exposeBoolean("softban"),
     date: t.exposeFloat("date"),
   }),
 });
@@ -63,6 +65,11 @@ builder.mutationField("signUp", (t) =>
         data: {
           email: await checkEmail(input.email),
           password: await hashPassword(input.password),
+          reservations: 0,
+          extensions: 0,
+          strikes: 0,
+          booked: false,
+          softban: false,
           date: Date.now(),
         },
       });
@@ -105,17 +112,15 @@ builder.mutationField("signIn", (t) =>
 builder.mutationField("strikeUser", (t) =>
   t.prismaField({
     type: "User",
-    args: {
-      id: t.arg.id(),
-    },
-    resolve: async (query, _root, { id }, _ctx) => {
-      const user = await db.user.findUnique({
+    resolve: async (query, _root, _args, { user }) => {
+      const currentUser = await db.user.update({
         ...query,
-        where: { id: id },
-        rejectOnNotFound: true,
+        where: { id: user?.id },
+        data: { strikes: user?.strikes! + 1 },
       });
-      await checkStrikes(user);
-      return user;
+
+      await checkStrikes(currentUser);
+      return currentUser;
     },
   })
 );
