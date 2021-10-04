@@ -5,9 +5,10 @@ import {
   hashPassword,
 } from "../../../src/utils/auth";
 import { db } from "../../../src/utils/prisma";
-import { createSession } from "../../../src/utils/session";
+import { createSession, removeSession } from "../../../src/utils/session";
 import { ZodError } from "zod";
 import { builder } from "../builder";
+import { Result } from "../../../src/utils/result";
 
 builder.prismaObject("User", {
   findUnique: (user) => ({ id: user.id }),
@@ -104,6 +105,17 @@ builder.mutationField("signIn", (t) =>
       await createSession(req, user);
 
       return user;
+    },
+  })
+);
+
+// signOut
+builder.mutationField("signOut", (t) =>
+  t.field({
+    type: Result,
+    resolve: async (_root, _args, { req, session }) => {
+      await removeSession(req, session!);
+      return Result.SUCCESS;
     },
   })
 );

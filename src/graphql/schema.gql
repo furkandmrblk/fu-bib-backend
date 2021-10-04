@@ -23,6 +23,7 @@ type Mutation {
   extendTable: MutationExtendTableResult!
   leaveTable: Table!
   signIn(input: userInput!): MutationSignInResult!
+  signOut: Result!
   signUp(input: userInput!): MutationSignUpResult!
   strikeUser: User!
   validateBooking: Table!
@@ -34,10 +35,7 @@ type MutationBookTableSuccess {
   data: Table!
 }
 
-union MutationExtendTableResult =
-    BaseError
-  | MutationExtendTableSuccess
-  | ZodError
+union MutationExtendTableResult = BaseError | MutationExtendTableSuccess | ZodError
 
 type MutationExtendTableSuccess {
   data: Table!
@@ -61,7 +59,9 @@ type Query {
   getLibrary(id: ID!): Library!
 }
 
-type Subscription
+enum Result {
+  SUCCESS
+}
 
 type Table {
   booked: Boolean!
