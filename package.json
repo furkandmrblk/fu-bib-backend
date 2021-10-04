@@ -7,7 +7,11 @@
     "dev": "nodemon",
     "start": "docker-compose up",
     "prisma:docker": "docker-compose run --publish 5555:5555 api yarn prisma",
+    "prisma:seed": "docker-compose run --publish 5555:5555 api yarn prisma db seed",
     "generate": "prisma generate"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "repository": "https://github.com/furkandmrblk/fu-bib-backend.git",
   "author": "furkandmrblk <ibrahimdmrblk@outlook.de>",
