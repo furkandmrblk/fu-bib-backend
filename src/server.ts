@@ -1,11 +1,11 @@
 import express from "express";
 import ws from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
-import { pubsub } from "./lib/express";
+import { pubsub } from "../src/lib/express";
 import { subscribe } from "graphql";
-import { schema } from "./graphql";
-import config from "./config";
-import { connectSession } from "./utils/session";
+import { schema } from "../src/graphql/index";
+import config from "../src/config";
+import { connectSession } from "../src/utils/session";
 
 async function startServer() {
   const app = express();

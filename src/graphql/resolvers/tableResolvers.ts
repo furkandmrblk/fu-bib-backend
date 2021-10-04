@@ -1,6 +1,6 @@
-import { checkBooking } from "src/utils/booking";
-import { db } from "src/utils/prisma";
-import { addMinutes } from "src/utils/time";
+import { checkBooking } from "../../../src/utils/booking";
+import { db } from "../../../src/utils/prisma";
+import { addMinutes } from "../../../src/utils/time";
 import { nullable } from "zod";
 import { builder } from "../builder";
 

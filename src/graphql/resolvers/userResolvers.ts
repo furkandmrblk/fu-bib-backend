@@ -3,9 +3,9 @@ import {
   checkStrikes,
   checkUser,
   hashPassword,
-} from "src/utils/auth";
-import { db } from "src/utils/prisma";
-import { createSession } from "src/utils/session";
+} from "../../../src/utils/auth";
+import { db } from "../../../src/utils/prisma";
+import { createSession } from "../../../src/utils/session";
 import { ZodError } from "zod";
 import { builder } from "../builder";
 

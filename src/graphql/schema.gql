@@ -1,5 +1,109 @@
-type Mutation
+type BaseError implements Error {
+  message: String!
+}
 
-type Query
+interface Error {
+  message: String!
+}
+
+type Library {
+  adress: String!
+  email: String!
+  id: ID!
+  name: String!
+  section: String!
+  table: [Table!]!
+  website: String
+}
+
+type Mutation {
+  bookTable(input: bookingInput!): MutationBookTableResult!
+  deleteUser: User!
+  endBooking: Table!
+  extendTable: MutationExtendTableResult!
+  leaveTable: Table!
+  signIn(input: userInput!): MutationSignInResult!
+  signUp(input: userInput!): MutationSignUpResult!
+  strikeUser: User!
+  validateBooking: Table!
+}
+
+union MutationBookTableResult = BaseError | MutationBookTableSuccess | ZodError
+
+type MutationBookTableSuccess {
+  data: Table!
+}
+
+union MutationExtendTableResult =
+    BaseError
+  | MutationExtendTableSuccess
+  | ZodError
+
+type MutationExtendTableSuccess {
+  data: Table!
+}
+
+union MutationSignInResult = BaseError | MutationSignInSuccess | ZodError
+
+type MutationSignInSuccess {
+  data: User!
+}
+
+union MutationSignUpResult = BaseError | MutationSignUpSuccess | ZodError
+
+type MutationSignUpSuccess {
+  data: User!
+}
+
+type Query {
+  getCurrentUser: User!
+  getLibraries: [Library!]!
+  getLibrary(id: ID!): Library!
+}
 
 type Subscription
+
+type Table {
+  booked: Boolean!
+  id: ID!
+  identifier: String!
+  library: Library!
+  libraryName: String!
+  time: Float
+  userId: String
+}
+
+type User {
+  booked: Boolean!
+  date: Float!
+  email: String!
+  extensions: Int
+  id: ID!
+  major: String
+  mostUsedLibrary: String
+  mostUserTable: String
+  name: String
+  password: String!
+  reservations: Int
+  softban: Boolean!
+  strikes: Int
+}
+
+type ZodError implements Error {
+  fieldErrors: [ZodFieldError!]!
+  message: String!
+}
+
+type ZodFieldError {
+  message: String!
+  path: [String!]!
+}
+
+input bookingInput {
+  identifier: String!
+}
+
+input userInput {
+  email: String!
+  password: String!
+}

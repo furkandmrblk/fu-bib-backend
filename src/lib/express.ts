@@ -1,4 +1,4 @@
-import express, { Application, urlencoded } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import {
   getGraphQLParameters,
