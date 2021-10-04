@@ -23,11 +23,13 @@ model Session {
 }
 
 model User {
-    id       String @id @default(uuid())
-    email    String @unique
+    id       String  @id @default(uuid())
+    email    String  @unique
     password String
     name     String?
     major    String?
+
+    booked Boolean
 
     mostUsedLibrary String?
     mostUsedTable   String?
@@ -36,17 +38,22 @@ model User {
     extensions   Int?
 
     strikes Int?
+    softban Boolean
 
     date    Float
     Session Session[]
 }
 
 model Library {
-    id      String @id @default(uuid())
-    name    String @unique
-    adress  String
-    email   String
-    website String
+    id           String  @id @default(uuid())
+    section      String  @unique
+    name         String  @unique
+    adress       String
+    secondAdress String?
+    email        String
+    website      String?
+
+    floor        String[]
 
     Table Table[]
 }
@@ -54,9 +61,10 @@ model Library {
 model Table {
     id         String  @id @default(uuid())
     identifier String  @unique
-    library    Library @relation(fields: [libraryId], references: [id])
-    libraryId  String
+    library    Library @relation(fields: [libraryName], references: [name])
+    libraryName  String
 
     booked Boolean
-    time   Float
+    userId String? @unique
+    time   Float?
 }

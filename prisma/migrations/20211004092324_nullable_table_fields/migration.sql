@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Table" ALTER COLUMN "time" DROP NOT NULL,
+ALTER COLUMN "userId" DROP NOT NULL;
