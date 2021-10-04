@@ -40,5 +40,6 @@ export const checkUser = async (email: string, password: string) => {
 export const checkStrikes = async (user: User) => {
   if (user.strikes === 3) {
     // Soft ban users account
+    await db.user.update({ where: { id: user.id }, data: { softban: true } });
   }
 };
