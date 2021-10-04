@@ -11,6 +11,7 @@ import PrismaPlugin from "@giraphql/plugin-prisma";
 import PrismaTypes from "../../prisma/giraphql-types";
 import { PubSub } from "graphql-subscriptions";
 import { IncomingMessage, OutgoingMessage } from "http";
+import { ZodError } from "zod";
 
 export interface Context {
   req: IncomingMessage;
@@ -77,7 +78,7 @@ export const builder = new SchemaBuilder<{
     }),
   },
   errorOptions: {
-    defaultTypes: [Error],
+    defaultTypes: [Error, ZodError],
   },
   prisma: { client: prisma },
 });
