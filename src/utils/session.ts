@@ -1,35 +1,16 @@
 import { Session, User } from ".prisma/client";
+import jwt from "jsonwebtoken";
 import { IncomingMessage, OutgoingMessage } from "http";
 import { applySession, SessionOptions } from "next-iron-session";
 import config from "../../src/config/index";
 import { db } from "./prisma";
+import { Response } from "express";
 
-const IRON_SESSION_KEY = "sessionID";
-const IRON_SESSION_COOKIE = "session";
-
-export const sessionOptions: SessionOptions = {
-  cookieName: IRON_SESSION_COOKIE,
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    httpOnly: true,
-  },
-  password: [
-    {
-      id: 1,
-      password: config.ironSessionKey!,
-    },
-  ],
-};
-
-interface RequestSession extends IncomingMessage {
-  session: import("next-iron-session").Session;
-}
 interface PrismaSession extends Session {
   user: User;
 }
 
-export const createSession = async (req: IncomingMessage, user: User) => {
+export const createSession = async (user: User) => {
   const session = await db.session.create({
     data: {
       userId: user.id,
@@ -37,18 +18,23 @@ export const createSession = async (req: IncomingMessage, user: User) => {
     },
   });
 
-  const requestSession = req as unknown as RequestSession;
+  const payload = {
+    session: session.id,
+  };
+  const secret = config.jwtKey;
+  const options = {
+    audience: user!.id,
+    expiresIn: "30d",
+  };
 
-  requestSession.session.set(IRON_SESSION_KEY, session.id);
-  await requestSession.session.save();
-
-  return session;
+  return jwt.sign(payload, secret!, options);
 };
 
 export const removeSession = async (req: IncomingMessage, session: Session) => {
-  const requestSession = req as unknown as RequestSession;
+  const token = req.headers["session"];
 
-  requestSession.session.destroy();
+  // get payload
+  const payload = verifySession(token as string);
 
   await db.session.delete({
     where: {
@@ -60,13 +46,16 @@ export const removeSession = async (req: IncomingMessage, session: Session) => {
 export const connectSession = async ({
   req,
   res,
-}: Pick<{ req: IncomingMessage; res?: OutgoingMessage }, "req" | "res">) => {
-  await applySession(req, res, sessionOptions);
+}: Pick<{ req: IncomingMessage; res?: Response }, "req" | "res">) => {
+  const token = req.headers["session"];
+  console.log('connectSession headers:"session": ', token);
+
+  // const payload = verifySession(token as string);
+  // console.log("payload connectSession", payload);
+
+  const sessionId = "1";
 
   let session: PrismaSession | null = null;
-
-  const requestSession = req as unknown as RequestSession;
-  const sessionId = requestSession.session.get(IRON_SESSION_KEY);
 
   if (sessionId) {
     session = await db.session.findUnique({
@@ -80,4 +69,20 @@ export const connectSession = async ({
   }
 
   return session;
+};
+
+const verifySession = async (token: string) => {
+  if (!token) throw new Error("Token not found.");
+
+  jwt.verify(
+    token,
+    config.jwtKey!,
+    (err: { message: string } | null, payload: any) => {
+      if (err) {
+        throw new Error(err.message);
+      } else {
+        return payload;
+      }
+    }
+  );
 };

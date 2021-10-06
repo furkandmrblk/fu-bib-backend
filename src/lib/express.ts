@@ -10,7 +10,7 @@ import {
 import { PubSub } from "graphql-subscriptions";
 import { schema } from "../../src/graphql/index";
 import config from "../../src/config/index";
-import { connectSession, sessionOptions } from "../../src/utils/session";
+import { connectSession } from "../../src/utils/session";
 import { Context, createGraphQLContext } from "../../src/graphql/builder";
 import { ironSession } from "next-iron-session";
 
@@ -24,7 +24,6 @@ export const expressLoader = async ({ app }: { app: Application }) => {
   // Body Parsers
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(ironSession(sessionOptions));
 
   // Next-Iron-Session & Options
 

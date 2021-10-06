@@ -60,7 +60,7 @@ builder.mutationField("signUp", (t) =>
       public: true,
     },
     skipTypeScopes: true,
-    resolve: async (query, _root, { input }, { req }) => {
+    resolve: async (query, _root, { input }, { res }) => {
       const user = await db.user.create({
         ...query,
         data: {
@@ -75,7 +75,9 @@ builder.mutationField("signUp", (t) =>
         },
       });
 
-      await createSession(req, user);
+      const token = await createSession(user);
+      res.setHeader("session", token);
+
       return user;
     },
   })
@@ -95,14 +97,15 @@ builder.mutationField("signIn", (t) =>
       public: true,
     },
     skipTypeScopes: true,
-    resolve: async (query, _root, { input }, { req }) => {
+    resolve: async (query, _root, { input }, { res }) => {
       await checkUser(input.email, input.password);
       const user = await db.user.findUnique({
         ...query,
         where: { email: input.email },
         rejectOnNotFound: true,
       });
-      await createSession(req, user);
+      const token = await createSession(user);
+      res.setHeader("session", token);
 
       return user;
     },
@@ -113,7 +116,13 @@ builder.mutationField("signIn", (t) =>
 builder.mutationField("signOut", (t) =>
   t.field({
     type: Result,
+    authScopes: {
+      public: true,
+    },
+    skipTypeScopes: true,
     resolve: async (_root, _args, { req, session }) => {
+      console.log("signOut request: ", req);
+
       await removeSession(req, session!);
       return Result.SUCCESS;
     },

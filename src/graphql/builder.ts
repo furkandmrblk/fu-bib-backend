@@ -12,10 +12,11 @@ import PrismaTypes from "../../prisma/giraphql-types";
 import { PubSub } from "graphql-subscriptions";
 import { IncomingMessage, OutgoingMessage } from "http";
 import { ZodError } from "zod";
+import { Response } from "express";
 
 export interface Context {
   req: IncomingMessage;
-  res: OutgoingMessage;
+  res: Response;
   pubsub: PubSub;
   user?: User | null;
   session?: Session | null;
@@ -23,7 +24,7 @@ export interface Context {
 
 export function createGraphQLContext(
   req: IncomingMessage,
-  res: OutgoingMessage,
+  res: Response,
   pubsub: PubSub,
   session?: (Session & { user: User }) | null
 ): Context {

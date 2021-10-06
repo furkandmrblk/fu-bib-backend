@@ -10,4 +10,5 @@ export default {
   path: "/graphql",
 
   ironSessionKey: process.env.IRON_SESSION_KEY,
+  jwtKey: process.env.JWT_KEY,
 };
