@@ -14,7 +14,10 @@ import { connectSession } from "../../src/utils/session";
 import { Context, createGraphQLContext } from "../../src/graphql/builder";
 import { ironSession } from "next-iron-session";
 
-const allowedOrigins: string[] = ["http://localhost:3000"];
+const allowedOrigins: string[] = [
+  "exp://127.0.0.1:19000",
+  "exp://192.168.2.226:19000",
+];
 export const pubsub = new PubSub();
 
 export const expressLoader = async ({ app }: { app: Application }) => {
