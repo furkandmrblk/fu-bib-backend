@@ -46,43 +46,43 @@ export const removeSession = async (req: IncomingMessage, session: Session) => {
 export const connectSession = async ({
   req,
   res,
-}: Pick<{ req: IncomingMessage; res?: Response }, "req" | "res">) => {
-  const token = req.headers["session"];
-  console.log('connectSession headers:"session": ', token);
+}: Pick<{ req: IncomingMessage; res?: Response }, "req" | "res">): Promise<
+  (Session & { user: User }) | null
+> => {
+  try {
+    const token = req.headers["session"];
+    console.log('connectSession headers:"session": ', token);
 
-  // const payload = verifySession(token as string);
-  // console.log("payload connectSession", payload);
+    const payload = await verifySession(token as string);
+    console.log("payload connectSession", payload);
 
-  const sessionId = "1";
+    let session: PrismaSession | null = null;
 
-  let session: PrismaSession | null = null;
+    if (payload.session) {
+      session = await db.session.findUnique({
+        where: {
+          id: payload.session,
+        },
+        include: {
+          user: true,
+        },
+      });
+    }
 
-  if (sessionId) {
-    session = await db.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
-    });
+    return session;
+  } catch (error) {
+    return null;
   }
-
-  return session;
 };
 
 const verifySession = async (token: string) => {
-  if (!token) throw new Error("Token not found.");
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, config.jwtKey!, (err, decoded: any) => {
+      if (err) return reject(err);
+      if (!("exp" in decoded) || !("iat" in decoded))
+        reject("Token has no 'EXP' or 'IAT'");
 
-  jwt.verify(
-    token,
-    config.jwtKey!,
-    (err: { message: string } | null, payload: any) => {
-      if (err) {
-        throw new Error(err.message);
-      } else {
-        return payload;
-      }
-    }
-  );
+      resolve(decoded);
+    });
+  });
 };

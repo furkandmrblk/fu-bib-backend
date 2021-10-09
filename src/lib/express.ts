@@ -28,6 +28,17 @@ export const expressLoader = async ({ app }: { app: Application }) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  app.get("/api/checkAuth", async (req, res) => {
+    console.log(req.headers["session"]);
+    const session = await connectSession({ req, res });
+
+    if (session && session?.user) {
+      res.status(200).send("Authenticated");
+    } else {
+      res.status(401).send("Unauthenticated");
+    }
+  });
+
   // Next-Iron-Session & Options
 
   // GraphQLHelix
