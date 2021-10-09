@@ -11,7 +11,7 @@ export const hashPassword = async (password: string) => {
 export const checkEmail = async (email: string) => {
   const emailExists = await db.user.findUnique({ where: { email: email } });
   if (emailExists) {
-    throw new Error(`${email} is already in use.`);
+    throw new Error(`${email} wird bereits genutzt.`);
   }
 
   return email;
@@ -24,14 +24,14 @@ export const checkPassword = async (
   const verifyPassword = await bcrypt.compare(password, hashedPassword);
 
   if (!verifyPassword) {
-    throw new Error("Invalid email or password.");
+    throw new Error("Email oder Passwort ist falsch.");
   }
 };
 // Email Exists & Password Correct?
 export const checkUser = async (email: string, password: string) => {
   const user = await db.user.findUnique({ where: { email: email } });
-  if (!user) throw new Error("Could not find user.");
-  if (!email || !password) throw new Error("Invalid email or password.");
+  if (!user) throw new Error("Benutzer konnte nicht gefunden werden.");
+  if (!email || !password) throw new Error("Email oder Passwort ist falsch.");
 
   await checkPassword(password, user.password);
   return user;

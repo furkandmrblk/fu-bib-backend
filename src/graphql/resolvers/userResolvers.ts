@@ -34,14 +34,26 @@ const userInput = builder.inputType("userInput", {
   fields: (t) => ({
     email: t.string({
       validate: {
-        minLength: 20,
-        maxLength: 100,
+        email: [true, { message: "Bitte Email eingeben." }],
+        minLength: [
+          20,
+          { message: "Email sollte mindestens 20 Zeichen lang sein." },
+        ],
+        maxLength: [
+          100,
+          { message: "Email sollte unter 100 Zeichen lang sein." },
+        ],
       },
+      required: true,
     }),
     password: t.string({
       validate: {
-        minLength: 8,
+        minLength: [
+          8,
+          { message: "Passwort sollte mindestens 8 Zeichen lang sein." },
+        ],
       },
+      required: true,
     }),
   }),
 });
