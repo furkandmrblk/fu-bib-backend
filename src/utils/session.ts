@@ -1,5 +1,5 @@
 import { Session, User } from ".prisma/client";
-import jwt from "jsonwebtoken";
+import jwt, { VerifyErrors, VerifyOptions } from "jsonwebtoken";
 import { IncomingMessage, OutgoingMessage } from "http";
 import { applySession, SessionOptions } from "next-iron-session";
 import config from "../../src/config/index";
@@ -9,6 +9,13 @@ import { Response } from "express";
 interface PrismaSession extends Session {
   user: User;
 }
+
+type PayloadProps = {
+  session: string;
+  iat: number;
+  exp: number;
+  aud: string;
+};
 
 export const createSession = async (user: User) => {
   const session = await db.session.create({
@@ -31,11 +38,6 @@ export const createSession = async (user: User) => {
 };
 
 export const removeSession = async (req: IncomingMessage, session: Session) => {
-  const token = req.headers["session"];
-
-  // get payload
-  const payload = verifySession(token as string);
-
   await db.session.delete({
     where: {
       id: session.id,
@@ -51,17 +53,15 @@ export const connectSession = async ({
 > => {
   try {
     const token = req.headers["session"];
-    console.log('connectSession headers:"session": ', token);
 
     const payload = await verifySession(token as string);
-    console.log("payload connectSession", payload);
 
     let session: PrismaSession | null = null;
 
-    if (payload.session) {
+    if (payload!.session) {
       session = await db.session.findUnique({
         where: {
-          id: payload.session,
+          id: payload!.session,
         },
         include: {
           user: true,
@@ -76,13 +76,17 @@ export const connectSession = async ({
 };
 
 const verifySession = async (token: string) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, config.jwtKey!, (err, decoded: any) => {
-      if (err) return reject(err);
-      if (!("exp" in decoded) || !("iat" in decoded))
-        reject("Token has no 'EXP' or 'IAT'");
+  return new Promise<PayloadProps | null>((resolve, reject) => {
+    jwt.verify(
+      token,
+      config.jwtKey!,
+      (err: VerifyErrors | null, decoded: any) => {
+        if (err) return reject(err);
+        if (!("exp" in decoded) || !("iat" in decoded))
+          reject("Token has no 'EXP' or 'IAT'");
 
-      resolve(decoded);
-    });
+        resolve(decoded);
+      }
+    );
   });
 };
