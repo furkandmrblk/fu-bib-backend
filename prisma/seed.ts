@@ -29,6 +29,7 @@ async function main() {
       data: {
         identifier: `A${i}`,
         libraryName: "Bibliotheksbereich 1: Universitätsbibliothek",
+        floor: "EG",
         booked: false,
         userId: null,
         time: null,

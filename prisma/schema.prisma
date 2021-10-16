@@ -53,16 +53,17 @@ model Library {
     email        String
     website      String?
 
-    floor        String[]
+    floor String[]
 
     Table Table[]
 }
 
 model Table {
-    id         String  @id @default(uuid())
-    identifier String  @unique
-    library    Library @relation(fields: [libraryName], references: [name])
-    libraryName  String
+    id          String  @id @default(uuid())
+    identifier  String  @unique
+    library     Library @relation(fields: [libraryName], references: [name])
+    libraryName String
+    floor       String
 
     booked Boolean
     userId String? @unique

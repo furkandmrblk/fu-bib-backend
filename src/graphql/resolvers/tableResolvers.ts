@@ -11,6 +11,7 @@ builder.prismaObject("Table", {
     identifier: t.exposeString("identifier"),
     library: t.relation("library"),
     libraryName: t.exposeString("libraryName"),
+    floor: t.exposeString("floor"),
     booked: t.exposeBoolean("booked"),
     userId: t.exposeString("userId", { nullable: true }),
     time: t.exposeFloat("time", { nullable: true }),
