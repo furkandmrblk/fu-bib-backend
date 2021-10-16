@@ -2,6 +2,7 @@ import {
   checkEmail,
   checkStrikes,
   checkUser,
+  confirmPassword,
   hashPassword,
 } from "../../../src/utils/auth";
 import { db } from "../../../src/utils/prisma";
@@ -55,6 +56,7 @@ const userInput = builder.inputType("userInput", {
       },
       required: true,
     }),
+    confirmPassword: t.string({ required: false }),
   }),
 });
 
@@ -77,7 +79,10 @@ builder.mutationField("signUp", (t) =>
         ...query,
         data: {
           email: await checkEmail(input.email),
-          password: await hashPassword(input.password),
+          password: await confirmPassword(
+            input.password,
+            input.confirmPassword!
+          ),
           reservations: 0,
           extensions: 0,
           strikes: 0,

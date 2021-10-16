@@ -2,6 +2,16 @@ import { User } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "./prisma";
 
+// Confirm Password
+export const confirmPassword = async (
+  password: string,
+  confirmPassword: string
+) => {
+  if (password !== confirmPassword)
+    throw new Error("Passwörter stimmen nicht überein.");
+  return hashPassword(password);
+};
+
 // Hash Password
 export const hashPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10);
