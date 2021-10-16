@@ -19,12 +19,12 @@ builder.queryField("getLibrary", (t) =>
   t.prismaField({
     type: "Library",
     args: {
-      id: t.arg.id(),
+      name: t.arg.string(),
     },
-    resolve: async (query, _root, { id }, _ctx) => {
+    resolve: async (query, _root, { name }, _ctx) => {
       return await db.library.findUnique({
         ...query,
-        where: { id: id },
+        where: { name: name },
         rejectOnNotFound: true,
       });
     },
