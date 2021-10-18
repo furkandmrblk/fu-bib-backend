@@ -9,6 +9,7 @@ interface Error {
 type Library {
   adress: String!
   email: String!
+  floor: [String!]!
   id: ID!
   name: String!
   section: String!
@@ -70,6 +71,7 @@ type Table {
   identifier: String!
   library: Library!
   libraryName: String!
+  order: Int!
   time: Float
   userId: String
 }

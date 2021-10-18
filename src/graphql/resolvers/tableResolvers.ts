@@ -9,6 +9,7 @@ builder.prismaObject("Table", {
   fields: (t) => ({
     id: t.exposeID("id"),
     identifier: t.exposeString("identifier"),
+    order: t.exposeInt("order"),
     library: t.relation("library"),
     libraryName: t.exposeString("libraryName"),
     floor: t.exposeString("floor"),

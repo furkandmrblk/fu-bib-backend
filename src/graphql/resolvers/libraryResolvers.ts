@@ -8,6 +8,7 @@ builder.prismaObject("Library", {
     section: t.exposeString("section"),
     name: t.exposeString("name"),
     adress: t.exposeString("adress"),
+    floor: t.exposeStringList("floor"),
     email: t.exposeString("email"),
     website: t.exposeString("website", { nullable: true }),
     table: t.relation("Table"),

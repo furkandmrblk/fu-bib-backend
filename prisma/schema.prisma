@@ -61,6 +61,7 @@ model Library {
 model Table {
     id          String  @id @default(uuid())
     identifier  String  @unique
+    order       Int
     library     Library @relation(fields: [libraryName], references: [name])
     libraryName String
     floor       String
