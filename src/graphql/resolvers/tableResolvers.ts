@@ -49,7 +49,7 @@ builder.mutationField("bookTable", (t) =>
       return await db.table.update({
         ...query,
         where: { identifier: input.identifier },
-        data: { userId: user?.id, booked: true, time: timer },
+        data: { booked: true, time: timer },
       });
     },
   })

@@ -21,7 +21,7 @@ builder.prismaObject("User", {
     major: t.exposeString("major", { nullable: true }),
     booked: t.exposeBoolean("booked"),
     mostUsedLibrary: t.exposeString("mostUsedLibrary", { nullable: true }),
-    mostUserTable: t.exposeString("mostUsedTable", { nullable: true }),
+    mostUsedTable: t.exposeString("mostUsedTable", { nullable: true }),
     reservations: t.exposeInt("reservations", { nullable: true }),
     extensions: t.exposeInt("extensions", { nullable: true }),
     strikes: t.exposeInt("strikes", { nullable: true }),
@@ -37,7 +37,7 @@ const userInput = builder.inputType("userInput", {
       validate: {
         email: [true, { message: "Bitte Email eingeben." }],
         minLength: [
-          20,
+          10,
           { message: "Email sollte mindestens 20 Zeichen lang sein." },
         ],
         maxLength: [
@@ -133,14 +133,8 @@ builder.mutationField("signIn", (t) =>
 builder.mutationField("signOut", (t) =>
   t.field({
     type: Result,
-    authScopes: {
-      public: true,
-    },
-    skipTypeScopes: true,
     resolve: async (_root, _args, { req, session }) => {
-      console.log("signOut request: ", req);
-
-      await removeSession(req, session!);
+      await removeSession(session!);
       return Result.SUCCESS;
     },
   })

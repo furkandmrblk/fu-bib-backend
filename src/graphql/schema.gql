@@ -58,6 +58,7 @@ type Query {
   getCurrentUser: User!
   getLibraries: [Library!]!
   getLibrary(name: String!): Library!
+  getTable(identifier: String!): Table!
 }
 
 enum Result {
@@ -84,7 +85,7 @@ type User {
   id: ID!
   major: String
   mostUsedLibrary: String
-  mostUserTable: String
+  mostUsedTable: String
   name: String
   password: String!
   reservations: Int
