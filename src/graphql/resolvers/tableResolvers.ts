@@ -141,3 +141,20 @@ builder.mutationField("leaveTable", (t) =>
     },
   })
 );
+
+// findTable
+builder.queryField("getTable", (t) =>
+  t.prismaField({
+    type: "Table",
+    args: {
+      identifier: t.arg.string(),
+    },
+    resolve: async (query, _root, { identifier }, _ctx) => {
+      return await db.table.findUnique({
+        ...query,
+        where: { identifier: identifier },
+        rejectOnNotFound: true,
+      });
+    },
+  })
+);
