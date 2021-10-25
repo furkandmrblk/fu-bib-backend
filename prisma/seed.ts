@@ -24,11 +24,11 @@ async function main() {
   // }
 
   // Tables
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 55; i++) {
     await prisma.table.create({
       data: {
-        identifier: `A-${i}`,
-        libraryName: "Bibliotheksbereich 1: Universitätsbibliothek",
+        identifier: `B-${i}`,
+        libraryName: "Bibliotheksbereich 1: Campusbibliothek",
         order: i,
         floor: "EG",
         booked: false,
@@ -37,24 +37,12 @@ async function main() {
       },
     });
   }
-  for (let i = 0; i < 15; i++) {
+
+  for (let i = 0; i < 25; i++) {
     await prisma.table.create({
       data: {
-        identifier: `A1-${i}`,
-        libraryName: "Bibliotheksbereich 1: Universitätsbibliothek",
-        order: i,
-        floor: "1.OG",
-        booked: false,
-        userId: null,
-        time: null,
-      },
-    });
-  }
-  for (let i = 0; i < 10; i++) {
-    await prisma.table.create({
-      data: {
-        identifier: `A2-${i}`,
-        libraryName: "Bibliotheksbereich 1: Universitätsbibliothek",
+        identifier: `B2-${i}`,
+        libraryName: "Bibliotheksbereich 1: Campusbibliothek",
         order: i,
         floor: "2.OG",
         booked: false,
@@ -65,22 +53,23 @@ async function main() {
   }
 
   // Users
-  // for (const user in users) {
-  //   if (Object.prototype.hasOwnProperty.call(users, user)) {
-  //     await prisma.user.create({
-  //       data: {
-  //         email: users[user].email,
-  //         password: await hashPassword(users[user].password),
-  //         reservations: users[user].reservations,
-  //         extensions: users[user].extensions,
-  //         strikes: users[user].strikes,
-  //         booked: users[user].booked,
-  //         softban: users[user].softban,
-  //         date: users[user].date,
-  //       },
-  //     });
-  //   }
-  // }
+  for (const user in users) {
+    if (Object.prototype.hasOwnProperty.call(users, user)) {
+      await prisma.user.create({
+        data: {
+          email: users[user].email,
+          password: await hashPassword(users[user].password),
+          admin: false,
+          reservations: users[user].reservations,
+          extensions: users[user].extensions,
+          strikes: users[user].strikes,
+          booked: users[user].booked,
+          softban: users[user].softban,
+          date: users[user].date,
+        },
+      });
+    }
+  }
 }
 
 main()

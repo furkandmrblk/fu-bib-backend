@@ -24,6 +24,7 @@ model Session {
 
 model User {
     id       String  @id @default(uuid())
+    admin    Boolean
     email    String  @unique
     password String
     name     String?

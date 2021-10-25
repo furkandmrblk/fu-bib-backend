@@ -17,6 +17,7 @@ builder.prismaObject("User", {
     id: t.exposeID("id"),
     email: t.exposeString("email"),
     password: t.exposeString("password"),
+    admin: t.exposeBoolean("admin"),
     name: t.exposeString("name", { nullable: true }),
     major: t.exposeString("major", { nullable: true }),
     booked: t.exposeBoolean("booked"),
@@ -83,6 +84,7 @@ builder.mutationField("signUp", (t) =>
             input.password,
             input.confirmPassword!
           ),
+          admin: false,
           reservations: 0,
           extensions: 0,
           strikes: 0,
