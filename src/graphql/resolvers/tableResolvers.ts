@@ -36,7 +36,7 @@ builder.mutationField("bookTable", (t) =>
       types: [Error],
     },
     resolve: async (query, _root, { input }, { user }) => {
-      checkBooking(user!);
+      await checkBooking(user!);
 
       const date = new Date().getTime();
       const timer: number = addMinutes(date, 30);
@@ -56,6 +56,27 @@ builder.mutationField("bookTable", (t) =>
 );
 
 // endBooking && cancelBooking
+builder.mutationField("cancelBooking", (t) =>
+  t.prismaField({
+    type: "Table",
+    args: {
+      identifier: t.arg.string(),
+    },
+    resolve: async (query, _root, { identifier }, { user }) => {
+      await db.user.update({
+        where: { id: user?.id },
+        data: { booked: false },
+      });
+
+      return await db.table.update({
+        ...query,
+        where: { identifier: identifier },
+        data: { booked: false, time: null, userId: null },
+      });
+    },
+  })
+);
+
 builder.mutationField("endBooking", (t) =>
   t.prismaField({
     type: "Table",

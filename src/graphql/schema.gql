@@ -19,6 +19,7 @@ type Library {
 
 type Mutation {
   bookTable(input: bookingInput!): MutationBookTableResult!
+  cancelBooking(identifier: String!): Table!
   deleteUser: User!
   endBooking: Table!
   extendTable: MutationExtendTableResult!
@@ -78,6 +79,7 @@ type Table {
 }
 
 type User {
+  admin: Boolean!
   booked: Boolean!
   date: Float!
   email: String!
