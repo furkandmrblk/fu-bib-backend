@@ -18,13 +18,14 @@ export const libraries: Library[] = [
     name: "Bibliotheksbereich 1: Universitätsbibliothek",
     address: "Garystr. 39 (Haupteingang), 14195 Berlin",
     email: "auskunft@ub.fu-berlin.de",
-    floor: ["UG", "EG"],
+    floor: ["UG", "EG", "1.OG", "2.OG"],
   },
   {
     section: "1.1",
     name: "Bibliotheksbereich 1: Campusbibliothek",
     address: "Fabeckstr. 23-25, 14195 Berlin",
     email: "auskunft@campusbib.fu-berlin.de",
+    floor: ["UG", "EG", "1.OG", "2.OG"],
   },
   {
     section: "2.0",

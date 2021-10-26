@@ -5,6 +5,7 @@ type User = {
   name?: string;
   major?: string;
   booked: boolean;
+  tableIdentifier?: string | null;
   reservations?: number;
   extensions?: number;
   strikes?: number;
@@ -20,6 +21,7 @@ export const users: User[] = [
     name: "Ibrahim Furkan Demirbilek",
     major: "Betriebswirtschaftslehre",
     booked: false,
+    tableIdentifier: null,
     reservations: 0,
     extensions: 0,
     strikes: 0,
@@ -33,6 +35,7 @@ export const users: User[] = [
     name: "Felix Yongbok",
     major: "Informatik",
     booked: false,
+    tableIdentifier: null,
     reservations: 0,
     extensions: 0,
     strikes: 0,
@@ -46,6 +49,7 @@ export const users: User[] = [
     name: "Ryunjin",
     major: "Medieninformatik",
     booked: false,
+    tableIdentifier: null,
     reservations: 0,
     extensions: 0,
     strikes: 0,
