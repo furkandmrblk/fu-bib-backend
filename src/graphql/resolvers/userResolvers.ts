@@ -21,6 +21,7 @@ builder.prismaObject("User", {
     name: t.exposeString("name", { nullable: true }),
     major: t.exposeString("major", { nullable: true }),
     booked: t.exposeBoolean("booked"),
+    tableIdentifier: t.exposeString("tableIdentifier", { nullable: true }),
     mostUsedLibrary: t.exposeString("mostUsedLibrary", { nullable: true }),
     mostUsedTable: t.exposeString("mostUsedTable", { nullable: true }),
     reservations: t.exposeInt("reservations", { nullable: true }),

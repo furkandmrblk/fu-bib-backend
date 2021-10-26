@@ -30,7 +30,8 @@ model User {
     name     String?
     major    String?
 
-    booked Boolean
+    booked          Boolean
+    tableIdentifier String?
 
     mostUsedLibrary String?
     mostUsedTable   String?
