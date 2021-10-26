@@ -1,7 +1,6 @@
 import { checkBooking } from "../../../src/utils/booking";
 import { db } from "../../../src/utils/prisma";
 import { addMinutes } from "../../../src/utils/time";
-import { nullable } from "zod";
 import { builder } from "../builder";
 
 builder.prismaObject("Table", {
@@ -43,7 +42,7 @@ builder.mutationField("bookTable", (t) =>
 
       await db.user.update({
         where: { id: user?.id },
-        data: { booked: true },
+        data: { booked: true, tableIdentifier: input.identifier },
       });
 
       return await db.table.update({
@@ -65,7 +64,7 @@ builder.mutationField("cancelBooking", (t) =>
     resolve: async (query, _root, { identifier }, { user }) => {
       await db.user.update({
         where: { id: user?.id },
-        data: { booked: false },
+        data: { booked: false, tableIdentifier: null },
       });
 
       return await db.table.update({
@@ -83,7 +82,7 @@ builder.mutationField("endBooking", (t) =>
     resolve: async (query, _root, _args, { user }) => {
       await db.user.update({
         where: { id: user?.id },
-        data: { booked: false },
+        data: { booked: false, tableIdentifier: null },
       });
 
       return await db.table.update({
@@ -96,24 +95,47 @@ builder.mutationField("endBooking", (t) =>
 );
 
 // validateBooking
+const validateInput = builder.inputType("validateInput", {
+  fields: (t) => ({
+    userId: t.string(),
+    tableIdentifier: t.string(),
+  }),
+});
+
 builder.mutationField("validateBooking", (t) =>
   t.prismaField({
     type: "Table",
-    resolve: async (query, _root, _args, { user }) => {
+    args: {
+      input: t.arg({ type: validateInput }),
+    },
+    errors: {
+      types: [Error],
+    },
+    resolve: async (query, _root, { input }, { user }) => {
+      if (!user?.admin)
+        throw new Error(
+          "Nur Administratoren können diese Funktion durchführen."
+        );
+
       const date = new Date().getTime();
       const timer: number = addMinutes(date, 90);
 
+      const bookingUser = await db.user.findUnique({
+        where: { id: input.userId },
+        rejectOnNotFound: true,
+      });
+
       await db.user.update({
-        where: { id: user?.id },
+        where: { id: input.userId },
         data: {
-          reservations: user?.reservations! + 1,
+          reservations: bookingUser.reservations! + 1,
         },
       });
 
       return await db.table.update({
         ...query,
-        where: { userId: user?.id },
-        data: { time: timer },
+        where: { identifier: input.tableIdentifier },
+        data: { userId: input.userId, time: timer },
       });
     },
   })
@@ -139,25 +161,6 @@ builder.mutationField("extendTable", (t) =>
         ...query,
         where: { userId: user?.id },
         data: { time: timer },
-      });
-    },
-  })
-);
-
-// leaveTable
-builder.mutationField("leaveTable", (t) =>
-  t.prismaField({
-    type: "Table",
-    resolve: async (query, _root, _args, { user }) => {
-      await db.user.update({
-        where: { id: user?.id },
-        data: { booked: false },
-      });
-
-      return await db.table.update({
-        ...query,
-        where: { userId: user?.id },
-        data: { booked: false, time: null, userId: null },
       });
     },
   })

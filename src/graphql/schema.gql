@@ -23,12 +23,11 @@ type Mutation {
   deleteUser: User!
   endBooking: Table!
   extendTable: MutationExtendTableResult!
-  leaveTable: Table!
   signIn(input: userInput!): MutationSignInResult!
   signOut: Result!
   signUp(input: userInput!): MutationSignUpResult!
   strikeUser: User!
-  validateBooking: Table!
+  validateBooking(input: validateInput!): MutationValidateBookingResult!
 }
 
 union MutationBookTableResult = BaseError | MutationBookTableSuccess | ZodError
@@ -53,6 +52,12 @@ union MutationSignUpResult = BaseError | MutationSignUpSuccess | ZodError
 
 type MutationSignUpSuccess {
   data: User!
+}
+
+union MutationValidateBookingResult = BaseError | MutationValidateBookingSuccess | ZodError
+
+type MutationValidateBookingSuccess {
+  data: Table!
 }
 
 type Query {
@@ -93,6 +98,7 @@ type User {
   reservations: Int
   softban: Boolean!
   strikes: Int
+  tableIdentifier: String
 }
 
 type ZodError implements Error {
@@ -113,4 +119,9 @@ input userInput {
   confirmPassword: String
   email: String!
   password: String!
+}
+
+input validateInput {
+  tableIdentifier: String!
+  userId: String!
 }
