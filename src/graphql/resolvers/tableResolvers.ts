@@ -1,3 +1,4 @@
+import { Result } from "../../../src/utils/result";
 import { checkBooking } from "../../../src/utils/booking";
 import { db } from "../../../src/utils/prisma";
 import { addMinutes } from "../../../src/utils/time";
@@ -15,6 +16,7 @@ builder.prismaObject("Table", {
     booked: t.exposeBoolean("booked"),
     userId: t.exposeString("userId", { nullable: true }),
     time: t.exposeFloat("time", { nullable: true }),
+    extendedTime: t.exposeBoolean("extendedTime"),
   }),
 });
 
@@ -88,7 +90,7 @@ builder.mutationField("endBooking", (t) =>
       return await db.table.update({
         ...query,
         where: { userId: user?.id },
-        data: { booked: false, time: null, userId: null },
+        data: { booked: false, time: null, extendedTime: false, userId: null },
       });
     },
   })
@@ -125,18 +127,22 @@ builder.mutationField("validateBooking", (t) =>
         rejectOnNotFound: true,
       });
 
-      await db.user.update({
-        where: { id: input.userId },
-        data: {
-          reservations: bookingUser.reservations! + 1,
-        },
-      });
-
-      return await db.table.update({
+      const table = await db.table.update({
         ...query,
         where: { identifier: input.tableIdentifier },
-        data: { userId: input.userId, time: timer },
+        data: { userId: input.userId, time: timer, extendedTime: true },
       });
+
+      if (table.extendedTime !== true) {
+        await db.user.update({
+          where: { id: input.userId },
+          data: {
+            reservations: bookingUser.reservations! + 1,
+          },
+        });
+      }
+
+      return table;
     },
   })
 );
