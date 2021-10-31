@@ -148,10 +148,19 @@ builder.mutationField("strikeUser", (t) =>
   t.prismaField({
     type: "User",
     resolve: async (query, _root, _args, { user }) => {
+      await db.table.update({
+        where: { identifier: user!.tableIdentifier! },
+        data: { booked: false, time: null },
+      });
+
       const currentUser = await db.user.update({
         ...query,
         where: { id: user?.id },
-        data: { strikes: user?.strikes! + 1 },
+        data: {
+          strikes: user?.strikes! + 1,
+          booked: false,
+          tableIdentifier: null,
+        },
       });
 
       await checkStrikes(currentUser);
