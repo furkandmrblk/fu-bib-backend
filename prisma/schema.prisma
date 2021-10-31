@@ -68,7 +68,8 @@ model Table {
     libraryName String
     floor       String
 
-    booked Boolean
-    userId String? @unique
-    time   Float?
+    booked       Boolean
+    userId       String? @unique
+    time         Float?
+    extendedTime Boolean
 }

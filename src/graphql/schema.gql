@@ -73,6 +73,7 @@ enum Result {
 
 type Table {
   booked: Boolean!
+  extendedTime: Boolean!
   floor: String!
   id: ID!
   identifier: String!
