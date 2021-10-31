@@ -5,6 +5,7 @@ type Table = {
   floor: string;
   userId: string | null;
   time: string | null;
+  extendedTime: boolean;
 };
 
 export const tables: Table[] = [
@@ -15,5 +16,6 @@ export const tables: Table[] = [
     booked: false,
     userId: null,
     time: null,
+    extendedTime: false,
   },
 ];

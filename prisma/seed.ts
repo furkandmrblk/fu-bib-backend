@@ -34,10 +34,10 @@ async function main() {
         booked: false,
         userId: null,
         time: null,
+        extendedTime: false,
       },
     });
   }
-
   for (let i = 0; i < 20; i++) {
     await prisma.table.create({
       data: {
@@ -48,10 +48,10 @@ async function main() {
         booked: false,
         userId: null,
         time: null,
+        extendedTime: false,
       },
     });
   }
-
   for (let i = 0; i < 25; i++) {
     await prisma.table.create({
       data: {
@@ -62,10 +62,10 @@ async function main() {
         booked: false,
         userId: null,
         time: null,
+        extendedTime: false,
       },
     });
   }
-
   for (let i = 0; i < 20; i++) {
     await prisma.table.create({
       data: {
@@ -76,6 +76,7 @@ async function main() {
         booked: false,
         userId: null,
         time: null,
+        extendedTime: false,
       },
     });
   }
